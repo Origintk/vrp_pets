@@ -1,5 +1,7 @@
-vRPserver = Tunnel.getInterface("vRP", "vrp_pets_client")
+local Tunnel = module("vrp", "lib/Tunnel")
+local Proxy = module("vrp", "lib/Proxy")
 vRP = Proxy.getInterface("vRP")
+vRPclient = Tunnel.getInterface("vRP")
 
 local Keys = {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
@@ -115,7 +117,7 @@ AddEventHandler("vrp_pets:givefood", function (data)
 	local coords2 = GetEntityCoords(ped)
 	local distance = GetDistanceBetweenCoords(coords1.x, coords1.y, coords1.z, coords2.x, coords2.y, coords2.z, true)
 	for k,v in pairs(inventory) do
-		if k == 'croquettes' then
+		if k == 'racao' then
 			amount = inventory[k].amount
 		end
 	end
@@ -123,20 +125,20 @@ AddEventHandler("vrp_pets:givefood", function (data)
 		if amount >= 1 then
 			if status < 100 then
 				status = status + math.random(2, 15)
-				vRP.notify("Deste comida ao teu animal de estimação.")
+				vRP._notify("Deste comida ao teu animal de estimação.")
 				TriggerServerEvent('vrp_pets:startHarvest')
 				if status > 100 then
 					status = 100
 				end
 				vRP.closeMenu()
 			else
-				vRP.notify("O teu animal de estimação já não tem fome.")
+				vRP._notify("O teu animal de estimação já não tem fome.")
 			end
 		else
-			vRP.notify("~sr~Não tens mais comida para o teu animal de estimação!~s~")
+			vRP.-_notify("~sr~Não tens mais comida para o teu animal de estimação!~s~")
 		end
 	else
-		vRP.notify("~r~O teu animal de estimação está demasiado longe!~s~")
+		vRP._notify("~r~O teu animal de estimação está demasiado longe!~s~")
 	end
 end)
 
@@ -151,7 +153,7 @@ AddEventHandler("vrp_pets:attachdettach", function ()
 			isAttached = false
 		end
 	else
-		vRP.notify({"~r~You can\'t attach your pet in a car!~s~"})
+		vRP._notify("~r~You can\'t attach your pet in a car!~s~")
 	end
 end)
 
@@ -178,10 +180,10 @@ AddEventHandler("vrp_pets:enterleaveveh", function ()
 				end 
 				vRP.closeMenu()
 			else
-				vRP.notify({"~r~O teu animal de estimação está demasiado longe do carro!~s~"})
+				vRP._notify("~r~O teu animal de estimação está demasiado longe do carro!~s~")
 			end
 		else
-			vRP.notify({"É necessario estares dentro do carro!"})
+			vRP._notify("É necessario estares dentro do carro!")
 		end
 	else
 		if not IsPedSittingInAnyVehicle(GetPlayerPed(-1)) then
@@ -191,7 +193,7 @@ AddEventHandler("vrp_pets:enterleaveveh", function ()
 			isInVehicle = false
 			vRP.closeMenu()
 		else
-			vRP.notify({"Ainda estás dentro de um carro."})
+			vRP._notify("Ainda estás dentro de um carro.")
 		end
 	end
 end)
@@ -207,7 +209,7 @@ AddEventHandler("vrp_pets:findball", function ()
 		SetGroupSeparationRange(GroupHandle, 1.9)
 		SetPedNeverLeavesGroup(ped, false)
 	else
-		vRP.notify({"Sem bolas restantes"})
+		vRP._notify("Sem bolas restantes")
 	end
 end)
 
@@ -384,7 +386,7 @@ Citizen.CreateThread(function()
 		if status == 0 then
 			TriggerServerEvent('vrp_pets:dead')
 			DeleteEntity(ped)
-			vRP.notify({"O teu animal de estimação está morto! Da proxima vez lembra-te de lhe dar comida"})
+			vRP._notify("O teu animal de estimação está morto! Da proxima vez lembra-te de lhe dar comida")
 			come = 3
 			status = "die"
 		end
