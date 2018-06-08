@@ -1,13 +1,16 @@
 description 'vrp_pets'
 
+dependencies{
+  "vrp",
+  "GHMattiMySQL"
+}
+
 client_scripts {
-	"@vrp/client/Tunnel.lua",
-	"@vrp/client/Proxy.lua",
-	'client/main.lua'
+  "@vrp/lib/utils.lua",
+	'client.lua'
 }
 
 server_scripts {
-	"@vrp/lib/utils.lua",
-	'@mysql-async/lib/MySQL.lua',
-	'server/main.lua'
+  "@vrp/lib/utils.lua",
+	'server.lua'
 }
